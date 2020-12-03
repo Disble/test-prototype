@@ -1,48 +1,46 @@
-import DotCSV from './dotcsv.js';
 import utils from './utils.js';
 
 const dstats = async () => {
-  const jsonTest = await utils.jsonRequest('https://jsonplaceholder.typicode.com/todos/1');
+  const jsonTest = await utils.jsonRequest('https://jsonplaceholder.typicode.com/todos');
 
   console.log('📋 jsonTest', jsonTest);
+  
+  const usersListplay = {};
 
-  // const sphere2D = new DotCSV(sphere2DCSV, ['X', 'Y']);
+  for (const user of jsonTest) {
+    if (!usersListplay[user.userId]) {
+      usersListplay[user.userId] = [];
+    }
+    usersListplay[user.userId].push(user.title);
+  }
 
-  // const trace1 = {
-  //   x: sphere3D.x,
-  //   y: sphere3D.y,
-  //   z: sphere3D.z,
-  //   marker: {
-  //     size: 2,
-  //     color: sphere3D.getColors('petal width'),
-  //     colorscale: 'Reds',
-  //     line: { color: 'transparent' }
-  //   },
-  //   mode: 'markers',
-  //   type: 'scatter3d',
-  //   text: sphere3D.getColumn('iris'),
-  //   hoverinfo: 'x+y+z+text',
-  //   showlegend: false,
-  // };
+  console.log('🎵 user music list', usersListplay);
 
-  // const data = [trace1];
 
-  // const layout = {
-  //   paper_bgcolor: 'white',
-  //   title: 'Sphere reduction',
-  //   font: { color: 'black' },
-  //   margin: {
-  //     l: 5,
-  //     r: 5,
-  //     b: 100,
-  //     t: 100,
-  //     // pad: 4
-  //   },
-  // };
+  const trace = {
+    x: Object.keys(usersListplay),
+    y: usersListplay,
+    type: 'bar',
+  };
 
-  // const config = {showLink: false, responsive: true}
+  const data = [trace];
 
-  // Plotly.newPlot("plot-stats", data, layout, config);
+  const layout = {
+    paper_bgcolor: 'white',
+    title: 'Quality curve',
+    font: { color: 'black' },
+    margin: {
+      l: 10,
+      r: 10,
+      b: 100,
+      t: 100,
+      // pad: 4
+    },
+  };
+
+  const config = { showLink: false, responsive: true }
+
+  Plotly.newPlot("plot-stats", data, layout, config);
 }
 
 export default dstats;
