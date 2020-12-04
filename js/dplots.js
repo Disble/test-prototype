@@ -3,10 +3,10 @@ import utils from './utils.js';
 
 const dplots = async () => {
   const sphere2DCSV = await utils.csvRequest('../csv/MDSRDLabeled.csv');
-  const sphere3DCSV = await utils.csvRequest('../csv/Iris.csv');
+  const sphere3DCSV = await utils.csvRequest('../csv/winequality-red-reduce.csv');
 
   const sphere2D = new DotCSV(sphere2DCSV, ['X', 'Y']);
-  const sphere3D = new DotCSV(sphere3DCSV, ['sepal length', 'sepal width', 'petal length']);
+  const sphere3D = new DotCSV(sphere3DCSV, ['0', '1', '2']);
 
   const trace1 = {
     x: sphere3D.x,
@@ -14,7 +14,7 @@ const dplots = async () => {
     z: sphere3D.z,
     marker: {
       size: 2,
-      color: sphere3D.getColors('petal width'),
+      color: sphere3D.getColors('residual sugar'),
       colorscale: 'Reds',
       line: { color: 'transparent' }
     },
@@ -57,8 +57,8 @@ const dplots = async () => {
       pattern: 'independent',
     },
     margin: {
-      l: 5,
-      r: 5,
+      l: 50,
+      r: 50,
       b: 100,
       t: 100,
       // pad: 4
