@@ -3,3 +3,8 @@
   width:100vw;
   height:auto;
 }
+.control-3d {
+  position: relative;
+  width: 100vw;
+  height: 80vw;
+}
