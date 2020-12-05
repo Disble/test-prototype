@@ -29,13 +29,13 @@ const dstats = async () => {
     paper_bgcolor: 'white',
     title: 'Quality curve',
     font: { color: 'black' },
-    margin: {
-      l: 10,
-      r: 10,
-      b: 100,
-      t: 100,
-      // pad: 4
-    },
+    // margin: {
+    //   l: 10,
+    //   r: 10,
+    //   b: 100,
+    //   t: 100,
+    //   // pad: 4
+    // },
   };
 
   const config = { showLink: false, responsive: true }

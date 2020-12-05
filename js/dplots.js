@@ -56,13 +56,13 @@ const dplots = async () => {
       columns: 2,
       pattern: 'independent',
     },
-    margin: {
-      l: 50,
-      r: 50,
-      b: 100,
-      t: 100,
-      // pad: 4
-    },
+    // margin: {
+    //   l: 50,
+    //   r: 50,
+    //   b: 100,
+    //   t: 100,
+    //   // pad: 4
+    // },
     // autosize: false,
   };
 
