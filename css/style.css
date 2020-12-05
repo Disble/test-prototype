@@ -2,36 +2,49 @@
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-columns: 4fr 400px;
-  grid-template-rows: 1fr 1fr 20px;
+  grid-template-columns: [xi] 1fr [x2] 400px [xf];
+  grid-template-rows: [yi] 1fr [y2] 1fr [y3] 1fr [y4] 20px [yf];
   /* row-gap: 50px; */
   /* column-gap: 30px; */
-  grid-template-areas:  "plot controls"
+  /* grid-template-areas:  "plot controls"
+                        "plot control-3d" 
                         "stats control-3d" 
-                        "stat coeficients";
+                        "stat coeficients"; */
   /* gap: 5px; */
 }
 .plot {
-  grid-area: plot;
-}
-.control-3d {
-  grid-area: control-3d;
-}
-.stats {
-  grid-area: stats;  
+  /* grid-column: 1 / 2; */
+  /* grid-row: 1 / 3; */
+  grid-column: xi / x2;
+  grid-row: yi / y3;
 }
 .controls {
-  grid-area: controls;
+  /* grid-area: controls; */
+  grid-column: x2 / xf;
+  grid-row: yi / y2;
+}
+.stats {
+  /* grid-area: stats;   */
+  grid-column: xi / x2;
+  grid-row: y3 / y4;
+}
+.control-3d {
+  /* grid-area: control-3d; */
+  grid-column: x2 / xf;
+  grid-row: y2 / y4;
 }
 .coeficients {
-  grid-area: coeficients;
+  /* grid-area: coeficients; */
+  grid-column: x2 / xf;
+  grid-row: y4 / yf;
+  /* sub class */
+  display: inline-flex;
+  justify-content: space-evenly;
 }
-
+.blank {
+  grid-column: xi / x1;
+  grid-row: y4 / yf;
+}
 .item {
-  background: lightblue;
-  /* padding: 10px; */
-  /* border: 1px solid red; */
+  /* background: lightblue; */
 }
-/* .item:nth-of-type(1) {
-  grid-column: inicio / destacado-end;
-} */
