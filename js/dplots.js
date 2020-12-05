@@ -63,7 +63,12 @@ const dplots = async () => {
       t: 100,
       // pad: 4
     },
-    // autosize: false,
+    xaxis2: {
+      constrain: 'domain'
+    },
+    yaxis2: {
+      scaleanchor: 'x2'
+    }
   };
 
   const config = { responsive: true }
