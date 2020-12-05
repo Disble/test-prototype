@@ -1,20 +1,20 @@
 .container {
+  width: 100vw;
+  height: 100vh;
   display: grid;
   grid-template-columns: 4fr 400px;
-  grid-template-rows: 1fr 1fr;
-  /* grid-template: filas / columnas; */
-  /* grid-template: 100px 1fr 150px / 200px 3fr; */
+  grid-template-rows: 1fr 1fr 20px;
   /* row-gap: 50px; */
   /* column-gap: 30px; */
-  grid-template-areas: "plot controls" "stats control-3d" ;
-  gap: 5px;
-  /* height: 100vh; */
+  grid-template-areas:  "plot controls"
+                        "stats control-3d" 
+                        "stat coeficients";
+  /* gap: 5px; */
 }
 .plot {
   grid-area: plot;
 }
 .control-3d {
-  width: 400px;
   grid-area: control-3d;
 }
 .stats {
@@ -22,6 +22,9 @@
 }
 .controls {
   grid-area: controls;
+}
+.coeficients {
+  grid-area: coeficients;
 }
 
 .item {

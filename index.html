@@ -12,17 +12,28 @@
 </head>
 <body>
   <div class="container">
-    <div class="item plot">
-      <div id="plot-reduction" class="plot"></div>
+    <div id="plot-reduction" class="plot"></div>
+    <div
+      id="plot-stats"
+      class="stats"
+    ></div>
+    <div class="item controls">
+      <select
+        name=""
+        id=""
+      >
+        <option value="">Selecciona un valor</option>
+        <option value="">3D</option>
+        <option value="">2D</option>
+      </select>
     </div>
-    <div class="item stats">
-      <div id="plot-stats"></div>
-    </div>
-    <div class="item controls"></div>
-    <div class="item control-3d">
-      <div
-        id="control-3d"
-      ></div>
+    <div
+      id="control-3d"
+      class="control-3d"
+    ></div>
+    <div class="item"></div>
+    <div class="item coeficients">
+      coeficients
     </div>
   </div>
   <script src="js/plotly-latest.min.js"></script>

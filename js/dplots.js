@@ -56,17 +56,17 @@ const dplots = async () => {
       columns: 2,
       pattern: 'independent',
     },
-    // margin: {
-    //   l: 50,
-    //   r: 50,
-    //   b: 100,
-    //   t: 100,
-    //   // pad: 4
-    // },
+    margin: {
+      l: 50,
+      r: 50,
+      b: 50,
+      t: 100,
+      // pad: 4
+    },
     // autosize: false,
   };
 
-  const config = {showLink: false, responsive: true}
+  const config = { responsive: true }
 
   Plotly.newPlot("plot-reduction", data, layout, config);
 }
