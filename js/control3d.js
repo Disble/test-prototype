@@ -1,5 +1,5 @@
 import * as THREE from './three.module.js';
-import { OrbitControls } from './OrbitControls.js';
+// import { OrbitControls } from './OrbitControls.js';
 
 const elContainer = document.getElementById('control-3d');
 const elContainerWidth = elContainer.offsetWidth;
@@ -71,15 +71,15 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 elContainer.appendChild(renderer.domElement);
 
 // Solo con el new ya se crea y activa los controls
-const controls = new OrbitControls(renderCamera, renderer.domElement);
-if (!enableAllControls) {
-  // Desactiva las teclas
-  controls.enableKeys = false;
-  // Desactiva que se pueda mover la cámara con el mouse o teclado
-  controls.screenSpacePanning = false;
-  // Deshabilita la posiblidad de hacer zoom
-  controls.enableZoom = false;
-}
+// const controls = new OrbitControls(renderCamera, renderer.domElement);
+// if (!enableAllControls) {
+//   // Desactiva las teclas
+//   controls.enableKeys = false;
+//   // Desactiva que se pueda mover la cámara con el mouse o teclado
+//   controls.screenSpacePanning = false;
+//   // Deshabilita la posiblidad de hacer zoom
+//   controls.enableZoom = false;
+// }
 
 window.addEventListener('resize', resize);
 
@@ -89,6 +89,54 @@ function resize() {
   renderer.setSize(elContainerWidth, elContainerHeight);
   renderer.render(scene, renderCamera);
 }
+
+
+// #######################
+// INTENTO DE ROTACION EN 3D
+let isDragging = false;
+let previousMousePosition = {
+  x: 0,
+  y: 0
+};
+
+renderer.domElement.addEventListener('mousedown', () => {
+  isDragging = true;
+});
+
+renderer.domElement.addEventListener('mousemove', e => {
+  const deltaMove = {
+    x: e.offsetX - previousMousePosition.x,
+    y: e.offsetY - previousMousePosition.y
+  };
+
+  // console.log('🎲 deltaMove', deltaMove);
+
+  if (isDragging) {
+    const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(
+        toRadians(deltaMove.y * 1),
+        toRadians(deltaMove.x * 1),
+        0,
+        'XYZ'
+      )
+    );
+    mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
+  }
+
+  previousMousePosition = {
+    x: e.offsetX,
+    y: e.offsetY
+  };
+});
+
+renderer.domElement.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+
+
+
+// #######################
 
 const animate = () => {
   requestAnimationFrame(animate);
@@ -114,3 +162,6 @@ const animate = () => {
 }
 
 animate();
+
+const toRadians = (angle) => angle * (Math.PI / 180);
+const toDegrees = (angle) => angle * (180 / Math.PI);
