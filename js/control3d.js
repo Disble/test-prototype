@@ -7,7 +7,7 @@ const elContainerHeight = elContainer.offsetHeight;
 
 let isWireframe = false;
 let hasAxesHelpers = false;
-let enableAllControls = false;
+// let enableAllControls = false;
 let usePerspectiveCamera = false;
 
 const scene = new THREE.Scene({ antialias: true });
@@ -99,11 +99,13 @@ let previousMousePosition = {
   y: 0
 };
 
-renderer.domElement.addEventListener('mousedown', () => {
+renderer.domElement.addEventListener('mousedown', e => {
+  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   isDragging = true;
 });
 
 renderer.domElement.addEventListener('mousemove', e => {
+  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   const deltaMove = {
     x: e.offsetX - previousMousePosition.x,
     y: e.offsetY - previousMousePosition.y
@@ -129,7 +131,8 @@ renderer.domElement.addEventListener('mousemove', e => {
   };
 });
 
-renderer.domElement.addEventListener('mouseup', () => {
+renderer.domElement.addEventListener('mouseup', e => {
+  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   isDragging = false;
 });
 
@@ -164,4 +167,4 @@ const animate = () => {
 animate();
 
 const toRadians = (angle) => angle * (Math.PI / 180);
-const toDegrees = (angle) => angle * (180 / Math.PI);
+const isLeftClick = (e) => e.buttons === 1;
