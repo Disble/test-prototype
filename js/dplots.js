@@ -50,7 +50,7 @@ const dplots = async () => {
   const layout = {
     paper_bgcolor: 'white',
     title: 'Sphere reduction',
-    font: { color: 'black' },
+    font: { color: 'rgb(42 59 71)', family: 'Open Sans' },
     grid: {
       rows: 1,
       columns: 2,
