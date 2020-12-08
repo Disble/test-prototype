@@ -76,23 +76,15 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 // Agregamos el renderizado al DOM, aún no muestra.
 elContainer.appendChild(renderer.domElement);
 
-// Solo con el new ya se crea y activa los controls
-// const controls = new OrbitControls(renderCamera, renderer.domElement);
-// if (!enableAllControls) {
-//   // Desactiva las teclas
-//   controls.enableKeys = false;
-//   // Desactiva que se pueda mover la cámara con el mouse o teclado
-//   controls.screenSpacePanning = false;
-//   // Deshabilita la posiblidad de hacer zoom
-//   controls.enableZoom = false;
-// }
-
 window.addEventListener('resize', resize);
 
 function resize() {
-  renderCamera.aspect = elContainerWidth / elContainerHeight;
+  const elContainerUpdated = document.getElementById('control-3d');
+  const elContainerWidthUpdated = elContainerUpdated.offsetWidth;
+  const elContainerHeightUpdated = elContainerUpdated.offsetHeight;
+  renderCamera.aspect = elContainerWidthUpdated / elContainerHeightUpdated;
   renderCamera.updateProjectionMatrix();
-  renderer.setSize(elContainerWidth, elContainerHeight);
+  renderer.setSize(elContainerWidthUpdated, elContainerHeightUpdated);
   renderer.render(scene, renderCamera);
 }
 
@@ -106,7 +98,7 @@ let previousMousePosition = {
 };
 
 renderer.domElement.addEventListener('mousedown', e => {
-  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
+  // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   isDragging = true;
 });
 
@@ -146,29 +138,9 @@ renderer.domElement.addEventListener('mouseup', e => {
 });
 
 
-
-
 // #######################
-
 const animate = () => {
   requestAnimationFrame(animate);
-
-  // Recorre todos los objetos de la escena.
-  // La cámara cuenta como un objeto.
-  scene.traverse((object) => {
-    // Comprueba que el objeto es una forma
-    if (object.isMesh === true) {
-      // Rota el objeto en pantalla.
-      // object.rotation.x += 0.01;
-      // object.rotation.y += 0.01;
-      // Esto no se que hace
-      if (object.material.map) {
-        object.material.map.anisotropy = 16;
-      }
-    }
-  });
-
-  // FINAL
   // Renderiza en pantalla la escena y la cámara
   renderer.render(scene, renderCamera);
 }
