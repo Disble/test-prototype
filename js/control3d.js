@@ -103,7 +103,6 @@ renderer.domElement.addEventListener('mousedown', e => {
 });
 
 renderer.domElement.addEventListener('mousemove', e => {
-  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   const deltaMove = {
     x: e.offsetX - previousMousePosition.x,
     y: e.offsetY - previousMousePosition.y
@@ -111,7 +110,7 @@ renderer.domElement.addEventListener('mousemove', e => {
 
   // console.log('🎲 deltaMove', deltaMove);
 
-  if (isDragging) {
+  if (isDragging && isLeftClick(e)) {
     const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(
         toRadians(deltaMove.y * 1),
@@ -139,13 +138,13 @@ renderer.domElement.addEventListener('mouseup', e => {
 
 
 // #######################
-const animate = () => {
-  requestAnimationFrame(animate);
+const render = () => {
   // Renderiza en pantalla la escena y la cámara
   renderer.render(scene, renderCamera);
+  requestAnimationFrame(render);
 }
 
-animate();
+render();
 
 const toRadians = angle => angle * (Math.PI / 180);
 const isLeftClick = e => e.buttons === 1;
