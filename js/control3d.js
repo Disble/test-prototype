@@ -31,20 +31,26 @@ const helper = new THREE.CameraHelper(newCamera);
 scene.add(newCamera);
 scene.add(helper);
 
-const geometry = new THREE.TetrahedronGeometry();
-// Pinta cada cara
-geometry.faces[0].color.setHex(0Xfff644);
-geometry.faces[1].color.setHex(0x9DE03B);
-geometry.faces[2].color.setHex(0x20ABFE);
-geometry.faces[3].color.setHex(0xD03038);
+const geometry = new THREE.TetrahedronBufferGeometry();
+console.log(geometry);
 
-// Material básico de un solo color, sin reflejos, ni sombras.
-const material = new THREE.MeshBasicMaterial({
-  side: THREE.DoubleSide,
-  flatShading: true,
-  vertexColors: THREE.VertexColors,
-  wireframe: isWireframe
-});
+// Crea grupos de vertices a los que se asigna un material de una array.
+geometry.clearGroups(); // just in case
+geometry.addGroup(0, 3, 0); // first 3 vertices use material 0
+geometry.addGroup(3, 3, 1); // next 3 vertices use material 1
+geometry.addGroup(6, 9, 2); // remaining vertices use material 2
+geometry.addGroup(9, Infinity, 3); // remaining vertices use material 3
+
+// Pinta cada cara
+const material = [
+  // Material básico que no le afecta la luz, sin reflejos, ni sombras.
+  new THREE.MeshBasicMaterial({ color: 0Xfff644 }),
+  new THREE.MeshBasicMaterial({ color: 0x9DE03B }),
+  new THREE.MeshBasicMaterial({ color: 0x20ABFE }),
+  new THREE.MeshBasicMaterial({ color: 0xD03038 }),
+];
+
+// geometry.boundingSphere.center.x = 3;
 
 const mesh = new THREE.Mesh(
   geometry,
@@ -122,7 +128,9 @@ renderer.domElement.addEventListener('mousemove', e => {
         'XYZ'
       )
     );
+    // console.log(deltaRotationQuaternion);
     mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
+    // console.log('🔄 quaternion', mesh.quaternion);
   }
 
   previousMousePosition = {
@@ -132,7 +140,8 @@ renderer.domElement.addEventListener('mousemove', e => {
 });
 
 renderer.domElement.addEventListener('mouseup', e => {
-  if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
+  // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
+  console.log('🀄 mesh up', mesh);
   isDragging = false;
 });
 
@@ -166,5 +175,5 @@ const animate = () => {
 
 animate();
 
-const toRadians = (angle) => angle * (Math.PI / 180);
-const isLeftClick = (e) => e.buttons === 1;
+const toRadians = angle => angle * (Math.PI / 180);
+const isLeftClick = e => e.buttons === 1;
