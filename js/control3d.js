@@ -7,18 +7,17 @@ const elContainerHeight = elContainer.offsetHeight;
 
 let isWireframe = true;
 let hasAxesHelpers = false;
-// let enableAllControls = false;
 let usePerspectiveCamera = false;
 
 const scene = new THREE.Scene({ antialias: true });
 scene.background = new THREE.Color(0xffffff);
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  elContainerWidth / elContainerHeight,
-  0.1,
-  2000
-);
+const fov = 75;
+const aspect = elContainerWidth / elContainerHeight;
+const near = 0.1;
+const far = 2000;
+
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // Cámara con las guías
 const newCamera = new THREE.PerspectiveCamera(
@@ -31,26 +30,21 @@ const helper = new THREE.CameraHelper(newCamera);
 scene.add(newCamera);
 scene.add(helper);
 
-const geometry = new THREE.TetrahedronBufferGeometry();
+const geometry = new THREE.TetrahedronGeometry();
 console.log(geometry);
-
-// Crea grupos de vertices a los que se asigna un material de una array.
-geometry.clearGroups(); // just in case
-geometry.addGroup(0, 3, 0); // first 3 vertices use material 0
-geometry.addGroup(3, 3, 1); // next 3 vertices use material 1
-geometry.addGroup(6, 9, 2); // remaining vertices use material 2
-geometry.addGroup(9, Infinity, 3); // remaining vertices use material 3
-
 // Pinta cada cara
-const material = [
-  // Material básico que no le afecta la luz, sin reflejos, ni sombras.
-  new THREE.MeshBasicMaterial({ color: 0Xfff644, wireframe: isWireframe }),
-  new THREE.MeshBasicMaterial({ color: 0x9DE03B, wireframe: isWireframe }),
-  new THREE.MeshBasicMaterial({ color: 0x20ABFE, wireframe: isWireframe }),
-  new THREE.MeshBasicMaterial({ color: 0xD03038, wireframe: isWireframe }),
-];
+geometry.faces[0].color.setHex(0Xfff644);
+geometry.faces[1].color.setHex(0x9DE03B);
+geometry.faces[2].color.setHex(0x20ABFE);
+geometry.faces[3].color.setHex(0xD03038);
 
-// geometry.rotation.x = 1;
+// Material básico de un solo color, sin reflejos, ni sombras.
+const material = new THREE.MeshBasicMaterial({
+  side: THREE.DoubleSide,
+  flatShading: true,
+  vertexColors: THREE.VertexColors,
+  wireframe: isWireframe
+});
 
 const mesh = new THREE.Mesh(
   geometry,
@@ -65,12 +59,12 @@ scene.add(mesh);
 // mesh.rotation.set(0, 0, 1);
 // mesh.rotation.set(1, 1, 1);
 // mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -1.3) // 100% blue
-// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
+mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
 // mesh.rotation.set(2.685027739156758, -0.8057352837377293, 1.5341909982468425) // 100% green
 // mesh.rotation.set(2.5714788463742426, 0.7976984017569686, -3.122006451261966) // 100% red
 // mesh.rotation.set(1.0102729943720952, 0.032024282249154275, -0.8180855513429233) // 100% yellow
 // mesh.rotation.set(2.5, -0.81, 1.5) // 100% red x2 bassed on green
-mesh.rotation.set(5.5, -0.81, 1.5) // 100% red x2 bassed on green
+// mesh.rotation.set(5.5, -0.81, 1.5) // 100% red x2 bassed on green
 
 camera.position.set(-10, 10, 10);
 newCamera.position.z = 5;
