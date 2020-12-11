@@ -5,7 +5,7 @@ const elContainer = document.getElementById('control-3d');
 const elContainerWidth = elContainer.offsetWidth;
 const elContainerHeight = elContainer.offsetHeight;
 
-let isWireframe = false;
+let isWireframe = true;
 let hasAxesHelpers = false;
 // let enableAllControls = false;
 let usePerspectiveCamera = false;
@@ -44,13 +44,13 @@ geometry.addGroup(9, Infinity, 3); // remaining vertices use material 3
 // Pinta cada cara
 const material = [
   // Material básico que no le afecta la luz, sin reflejos, ni sombras.
-  new THREE.MeshBasicMaterial({ color: 0Xfff644 }),
-  new THREE.MeshBasicMaterial({ color: 0x9DE03B }),
-  new THREE.MeshBasicMaterial({ color: 0x20ABFE }),
-  new THREE.MeshBasicMaterial({ color: 0xD03038 }),
+  new THREE.MeshBasicMaterial({ color: 0Xfff644, wireframe: isWireframe }),
+  new THREE.MeshBasicMaterial({ color: 0x9DE03B, wireframe: isWireframe }),
+  new THREE.MeshBasicMaterial({ color: 0x20ABFE, wireframe: isWireframe }),
+  new THREE.MeshBasicMaterial({ color: 0xD03038, wireframe: isWireframe }),
 ];
 
-// geometry.boundingSphere.center.x = 3;
+// geometry.rotation.x = 1;
 
 const mesh = new THREE.Mesh(
   geometry,
@@ -58,6 +58,19 @@ const mesh = new THREE.Mesh(
 );
 scene.add(mesh);
 
+// x = arriba para abajo, y = arriba-izquierda a abajo-derecha, z = rota en sentido antihorario
+// mesh.rotation.set(x, y, z);
+// mesh.rotation.set(1, 0, 0);
+// mesh.rotation.set(0, 1, 0);
+// mesh.rotation.set(0, 0, 1);
+// mesh.rotation.set(1, 1, 1);
+// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -1.3) // 100% blue
+// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
+// mesh.rotation.set(2.685027739156758, -0.8057352837377293, 1.5341909982468425) // 100% green
+// mesh.rotation.set(2.5714788463742426, 0.7976984017569686, -3.122006451261966) // 100% red
+// mesh.rotation.set(1.0102729943720952, 0.032024282249154275, -0.8180855513429233) // 100% yellow
+// mesh.rotation.set(2.5, -0.81, 1.5) // 100% red x2 bassed on green
+mesh.rotation.set(5.5, -0.81, 1.5) // 100% red x2 bassed on green
 
 camera.position.set(-10, 10, 10);
 newCamera.position.z = 5;
@@ -133,6 +146,12 @@ renderer.domElement.addEventListener('mousemove', e => {
 renderer.domElement.addEventListener('mouseup', e => {
   // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   console.log('🀄 mesh up', mesh);
+  // console.log('🧧 renderer', renderer);
+  console.log('📹 camera', camera);
+  // console.log('🈯 camera projectionMatrix', camera.projectionMatrix);
+  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix);
+  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.determinant());
+  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.getMaxScaleOnAxis());
   isDragging = false;
 });
 
