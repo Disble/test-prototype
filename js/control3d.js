@@ -5,7 +5,7 @@ const elContainer = document.getElementById('control-3d');
 const elContainerWidth = elContainer.offsetWidth;
 const elContainerHeight = elContainer.offsetHeight;
 
-let isWireframe = true;
+let isWireframe = false;
 let hasAxesHelpers = false;
 let usePerspectiveCamera = false;
 
@@ -83,16 +83,16 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 // Agregamos el renderizado al DOM, aún no muestra.
 elContainer.appendChild(renderer.domElement);
 
-window.addEventListener('resize', resize);
-
-function resize() {
-  const elContainerUpdated = document.getElementById('control-3d');
-  const elContainerWidthUpdated = elContainerUpdated.offsetWidth;
-  const elContainerHeightUpdated = elContainerUpdated.offsetHeight;
-  renderCamera.aspect = elContainerWidthUpdated / elContainerHeightUpdated;
-  renderCamera.updateProjectionMatrix();
-  renderer.setSize(elContainerWidthUpdated, elContainerHeightUpdated);
-  renderer.render(scene, renderCamera);
+function resizeRendererToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const pixelRatio = window.devicePixelRatio;
+  const width  = canvas.clientWidth  * pixelRatio | 0;
+  const height = canvas.clientHeight * pixelRatio | 0;
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
+    renderer.setSize(width, height, false);
+  }
+  return needResize;
 }
 
 
@@ -152,6 +152,12 @@ renderer.domElement.addEventListener('mouseup', e => {
 
 // #######################
 const render = () => {
+  // responsive design
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
   // Renderiza en pantalla la escena y la cámara
   renderer.render(scene, renderCamera);
   requestAnimationFrame(render);
