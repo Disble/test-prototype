@@ -30,13 +30,33 @@ const helper = new THREE.CameraHelper(newCamera);
 scene.add(newCamera);
 scene.add(helper);
 
-const geometry = new THREE.TetrahedronGeometry();
-console.log(geometry);
-// Pinta cada cara
-geometry.faces[0].color.setHex(0Xfff644);
-geometry.faces[1].color.setHex(0x9DE03B);
-geometry.faces[2].color.setHex(0x20ABFE);
-geometry.faces[3].color.setHex(0xD03038);
+const geometry = new THREE.Geometry();
+geometry.vertices.push(
+  // new THREE.Vector3(0, 0, 0),  // 0
+  // new THREE.Vector3(-1, 0, 0),  // 1
+  // new THREE.Vector3(0, 0, 1),  // 2
+  // new THREE.Vector3(0, -1, 0),  // 3
+  new THREE.Vector3((8 / 9) ** 0.5, /** */ 0, /** */ -(1 / 3)),  // 0
+  new THREE.Vector3(-((2 / 9) ** 0.5), /** */(2 / 3) ** 0.5, /** */ -(1 / 3)),  // 1
+  new THREE.Vector3(-((2 / 9) ** 0.5), /** */ -((2 / 3) ** 0.5), /** */ -(1 / 3)),  // 2
+  new THREE.Vector3(0, 0, 1),  // 3
+);
+
+geometry.faces.push(
+  // bottom
+  new THREE.Face3(0, 1, 2),
+  // front
+  new THREE.Face3(0, 3, 2),
+  // right
+  new THREE.Face3(0, 1, 3),
+  // back
+  new THREE.Face3(1, 2, 3),
+);
+
+geometry.faces[0].color = new THREE.Color('#fff644');
+geometry.faces[1].color = new THREE.Color('#9DE03B');
+geometry.faces[2].color = new THREE.Color('#20ABFE');
+geometry.faces[3].color = new THREE.Color('#D03038');
 
 // Material básico de un solo color, sin reflejos, ni sombras.
 const material = new THREE.MeshBasicMaterial({
@@ -59,7 +79,7 @@ scene.add(mesh);
 // mesh.rotation.set(0, 0, 1);
 // mesh.rotation.set(1, 1, 1);
 // mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -1.3) // 100% blue
-mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
+// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
 // mesh.rotation.set(2.685027739156758, -0.8057352837377293, 1.5341909982468425) // 100% green
 // mesh.rotation.set(2.5714788463742426, 0.7976984017569686, -3.122006451261966) // 100% red
 // mesh.rotation.set(1.0102729943720952, 0.032024282249154275, -0.8180855513429233) // 100% yellow
@@ -83,18 +103,17 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 // Agregamos el renderizado al DOM, aún no muestra.
 elContainer.appendChild(renderer.domElement);
 
-function resizeRendererToDisplaySize(renderer) {
-  const canvas = renderer.domElement;
-  const pixelRatio = window.devicePixelRatio;
-  const width  = canvas.clientWidth  * pixelRatio | 0;
-  const height = canvas.clientHeight * pixelRatio | 0;
-  const needResize = canvas.width !== width || canvas.height !== height;
-  if (needResize) {
-    renderer.setSize(width, height, false);
-  }
-  return needResize;
+const resize = () => {
+  const elContainerUpdated = document.getElementById('control-3d');
+  const elContainerWidthUpdated = elContainerUpdated.offsetWidth;
+  const elContainerHeightUpdated = elContainerUpdated.offsetHeight;
+  renderCamera.aspect = elContainerWidthUpdated / elContainerHeightUpdated;
+  renderCamera.updateProjectionMatrix();
+  renderer.setSize(elContainerWidthUpdated, elContainerHeightUpdated);
+  renderer.render(scene, renderCamera);
 }
 
+window.addEventListener('resize', resize);
 
 // #######################
 // INTENTO DE ROTACION EN 3D
@@ -135,6 +154,7 @@ renderer.domElement.addEventListener('mousemove', e => {
     x: e.offsetX,
     y: e.offsetY
   };
+  // mesh.
 });
 
 renderer.domElement.addEventListener('mouseup', e => {
@@ -142,6 +162,8 @@ renderer.domElement.addEventListener('mouseup', e => {
   console.log('🀄 mesh up', mesh);
   // console.log('🧧 renderer', renderer);
   console.log('📹 camera', camera);
+
+  console.log('↗ normal', mesh.geometry.computeFaceNormals());
   // console.log('🈯 camera projectionMatrix', camera.projectionMatrix);
   // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix);
   // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.determinant());
@@ -152,12 +174,6 @@ renderer.domElement.addEventListener('mouseup', e => {
 
 // #######################
 const render = () => {
-  // responsive design
-  if (resizeRendererToDisplaySize(renderer)) {
-    const canvas = renderer.domElement;
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-  }
   // Renderiza en pantalla la escena y la cámara
   renderer.render(scene, renderCamera);
   requestAnimationFrame(render);
