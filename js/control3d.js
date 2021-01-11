@@ -1,3 +1,4 @@
+// ARCHIVO QUE CONTIENE UN TETRAHEDRON CON THREE.JS
 import * as THREE from './three.module.js';
 // import { OrbitControls } from './OrbitControls.js';
 
