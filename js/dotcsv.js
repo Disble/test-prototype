@@ -4,7 +4,7 @@
  * 
  * Visitad su canal: https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg
  */
-export default class DotCSV {
+class DotCSV {
   _setColors = ['red', 'blue', 'green', 'yellow', 'brown', 'pink', 'orchid',
     'mediumslateblue', 'orangered', 'darkgreen', 'steelblue', 'sandybrown',
     'maroon', 'slategrey', 'teal'];

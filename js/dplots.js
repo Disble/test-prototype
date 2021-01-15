@@ -1,5 +1,5 @@
-import DotCSV from './dotcsv.js';
-import utils from './utils.js';
+// import DotCSV from './dotcsv.js';
+// import utils from './utils.js';
 
 const dplots = async () => {
   const sphere2DCSV = await utils.csvRequest('../csv/MDSRDLabeled.csv');
@@ -76,4 +76,4 @@ const dplots = async () => {
   Plotly.newPlot("plot-reduction", data, layout, config);
 }
 
-export default dplots;
+// export default dplots;

@@ -1,4 +1,4 @@
-export default {
+const utils = {
   csvRequest: (path) => {
     return new Promise((resolve, reject) => {
       Plotly.d3.csv(path, function (err, rows) {

@@ -1,5 +1,5 @@
 // ARCHIVO QUE CONTIENE UN TETRAHEDRON CON THREE.JS
-import * as THREE from './three.module.js';
+// import * as THREE from './three.module.js';
 // import { OrbitControls } from './OrbitControls.js';
 
 const elContainer = document.getElementById('control-3d');

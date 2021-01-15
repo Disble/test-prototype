@@ -1,10 +1,10 @@
-import utils from './utils.js';
+// import utils from './utils.js';
 
 const dstats = async () => {
   // const jsonTest = await utils.jsonRequest('https://jsonplaceholder.typicode.com/todos');
 
   // console.log('📋 jsonTest', jsonTest);
-  
+
   // const usersListplay = {};
 
   // for (const user of jsonTest) {
@@ -43,4 +43,4 @@ const dstats = async () => {
   Plotly.newPlot("plot-stats", data, layout, config);
 }
 
-export default dstats;
+// export default dstats;
