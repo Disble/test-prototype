@@ -1,0 +1,24 @@
+{
+  "name": "test-prototype",
+  "version": "1.0.0",
+  "description": "Instalación:",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Disble/test-prototype.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Disble/test-prototype/issues"
+  },
+  "homepage": "https://github.com/Disble/test-prototype#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
