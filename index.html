@@ -15,18 +15,24 @@
     ></div>
     <div class="item controls">
       <select
-        name=""
-        id=""
+        id="toogle-control"
       >
-        <option value="">Esfera</option>
-        <option value="">Wine red</option>
-        <option value="">Wine white</option>
+        <option
+          value="three"
+          selected
+        >Three.js</option>
+        <option value="babylon">Babylon.js</option>
       </select>
+      <!-- <canvas id="render-canvas"></canvas> -->
     </div>
     <div
-      id="control-3d"
+      id="three-control"
       class="control-3d"
     ></div>
+    <canvas
+      id="babylon-control"
+      class="control-3d hidden"
+    ></canvas>
     <div class="item blank"></div>
     <div class="item coeficients">
       <span> <span class="bold">X:</span> <span>0.5</span></span>
@@ -35,6 +41,7 @@
     </div>
   </div>
   <script src="js/plotly-latest.min.js"></script>
+  <script src="js/babylon.js"></script>
   <script type="module" src="js/index.js"></script>
 </body>
 </html>

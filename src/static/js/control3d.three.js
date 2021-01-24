@@ -2,7 +2,7 @@
 import * as THREE from './three.module.js';
 // import { OrbitControls } from './OrbitControls.js';
 
-const elContainer = document.getElementById('control-3d');
+const elContainer = document.getElementById('three-control');
 const elContainerWidth = elContainer.offsetWidth;
 const elContainerHeight = elContainer.offsetHeight;
 
@@ -105,7 +105,7 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 elContainer.appendChild(renderer.domElement);
 
 const resize = () => {
-  const elContainerUpdated = document.getElementById('control-3d');
+  const elContainerUpdated = document.getElementById('three-control');
   const elContainerWidthUpdated = elContainerUpdated.offsetWidth;
   const elContainerHeightUpdated = elContainerUpdated.offsetHeight;
   renderCamera.aspect = elContainerWidthUpdated / elContainerHeightUpdated;
