@@ -38,6 +38,7 @@ const tetrahedronPrism = {
 // Box
 // const box = BABYLON.Mesh.Tetrahedron('box', 2, scene);
 const tetrahedron = BABYLON.MeshBuilder.CreatePolyhedron("t", tetrahedronPrism, scene);
+tetrahedron.updateFacetData();
 // const tetrahedron = BABYLON.MeshBuilder.CreatePolyhedron("h", { type: 0, size: 1, faceColors }, scene);
 tetrahedron.rotation.x = -0.2;
 tetrahedron.rotation.y = -0.4;
@@ -77,10 +78,92 @@ canvas.addEventListener('pointermove', e => {
 canvas.addEventListener('pointerup', e => {
   console.log('addEventListener(mouseup');
   isDragging = false;
+  tetrahedron.computeWorldMatrix(true);
+  tetrahedron.updateFacetData();
   console.log('🔺 tetrahedron', tetrahedron);
   console.log('↗ hola', 'hola');
-  console.log('↗ faces', tetrahedron.geometry);
+  console.log('📹 camera', camera);
+  // console.log('📹 camera', tetrahedron.position);
+  const dirToCamera = camera.position.clone().subtract(tetrahedron.position);
+  const normals = tetrahedron.getFacetLocalNormals();
+  // const normals = tetrahedron.getFacetLocalNormals();
+  dirToCamera.normalize()
+  console.log('📹↗ dirToCamera', dirToCamera);
+  // console.log('↗ dirToCamera normalize', tetrahedron.facetNb);
+  // console.log('↗ dirToCamera normalize', tetrahedron.getFacetLocalPositions());
+  console.log('↗ dirToCamera normalize', normals);
+  // console.log('↗ getVerticesData normalize', tetrahedron.getVerticesData(BABYLON.VertexBuffer.NormalKind));
+  // console.log('↗ angleValueFaceYellow', normals[0].multiply(dirToCamera));
+  const angleValueFaceYellow = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(0), dirToCamera);
+  const angleValueFaceGreen = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(1), dirToCamera);
+  const angleValueFaceBlue = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(2), dirToCamera);
+  const angleValueFaceRed = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(3), dirToCamera);
+
+  console.log('↗ angleValueFaceYellow', angleValueFaceYellow);
+  console.log('↗ angleValueFaceGreen', angleValueFaceGreen);
+  console.log('↗ angleValueFaceBlue', angleValueFaceBlue);
+  console.log('↗ angleValueFaceRed', angleValueFaceRed);
+  // console.log('↗', tetrahedron.getFacetNormal(0));
+  // console.log('↗', tetrahedron.getFacetNormal(1));
+
+  let facesPercentage = calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed);
+
+  console.log('↗ Percentage Yellow', facesPercentage.yellow);
+  console.log('↗ Percentage Green', facesPercentage.green);
+  console.log('↗ Percentage Blue', facesPercentage.blue);
+  console.log('↗ Percentage Red', facesPercentage.red);
+
+  document.getElementById('index-red').innerText = `${+facesPercentage.red.toFixed(2)}%`;
+  document.getElementById('index-yellow').innerText = `${+facesPercentage.yellow.toFixed(2)}%`;
+  document.getElementById('index-green').innerText = `${+facesPercentage.green.toFixed(2)}%`;
+  document.getElementById('index-blue').innerText = `${+facesPercentage.blue.toFixed(2)}%`;
 });
+
+function calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed) {
+  let angleValueTotal = 0;
+  let faceYellow = false;
+  let faceGreen = false;
+  let faceBlue = false;
+  let faceRed = false;
+  let contFaces = 0;
+  let facePercentageYellow = 0.0;
+  let facePercentageGreen = 0.0;
+  let facePercentageBlue = 0.0;
+  let facePercentageRed = 0.0;
+
+  if (angleValueFaceYellow >= 0) {
+    angleValueTotal += angleValueFaceYellow;
+    faceYellow = true;
+    contFaces++;
+  }
+  if (angleValueFaceGreen >= 0) {
+    angleValueTotal += angleValueFaceGreen;
+    faceGreen = true;
+    contFaces++;
+  }
+  if (angleValueFaceBlue >= 0) {
+    angleValueTotal += angleValueFaceBlue;
+    faceBlue = true;
+    contFaces++;
+  }
+  if (angleValueFaceRed >= 0) {
+    angleValueTotal += angleValueFaceRed;
+    faceRed = true;
+    contFaces++;
+  }
+
+  if (faceYellow) facePercentageYellow = angleValueFaceYellow / angleValueTotal * 100;
+  if (faceGreen) facePercentageGreen = angleValueFaceGreen / angleValueTotal * 100;
+  if (faceBlue) facePercentageBlue = angleValueFaceBlue / angleValueTotal * 100;
+  if (faceRed) facePercentageRed = angleValueFaceRed / angleValueTotal * 100;
+
+  return {
+    yellow: facePercentageYellow,
+    green: facePercentageGreen,
+    blue: facePercentageBlue,
+    red: facePercentageRed
+  }
+}
 
 // Resize
 window.addEventListener("resize", function () {

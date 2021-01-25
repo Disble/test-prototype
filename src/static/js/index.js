@@ -14,9 +14,17 @@ const main = () => {
       document.getElementById('three-control').classList.add('hidden');
       document.getElementById('babylon-control').classList.remove('hidden');
       engine.resize(); 
+      document.getElementById('index-red').innerText = `100%`;
+      document.getElementById('index-yellow').innerText = `0%`;
+      document.getElementById('index-green').innerText = `0%`;
+      document.getElementById('index-blue').innerText = `0%`;
     } else if (controlSelected === 'three') {
       document.getElementById('three-control').classList.remove('hidden');
       document.getElementById('babylon-control').classList.add('hidden');
+      document.getElementById('index-red').innerText = `33%`;
+      document.getElementById('index-yellow').innerText = `0%`;
+      document.getElementById('index-green').innerText = `33%`;
+      document.getElementById('index-blue').innerText = `33%`;
     }
   });
 }
