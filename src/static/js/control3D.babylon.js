@@ -49,27 +49,37 @@ tetrahedron.material = tetrahedronMaterial;
 
 // INTENTO DE ROTACION EN 3D x2
 let isDragging = false;
-let currentPosition = { x: 0, y: 0 };
+let previousMousePosition = { x: 0, y: 0 };
 
 canvas.addEventListener('pointerdown', e => {
   console.log('addEventListener(mousedown');
   // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
-  currentPosition.x = e.clientX;
-  currentPosition.y = e.clientY;
+  // previousMousePosition.x = previousMousePosition.x - e.clientX;
+  // previousMousePosition.y = previousMousePosition.x - e.clientY;
   isDragging = true;
 });
 
 canvas.addEventListener('pointermove', e => {
-  if (isDragging && isLeftClick(e)) {
-    tetrahedron.rotation.y = (e.clientX - currentPosition.x) / 80.0;
-    tetrahedron.rotation.x = (e.clientY - currentPosition.y) / 80.0;
+  const deltaMove = {
+    x: e.offsetX - previousMousePosition.x,
+    y: e.offsetY - previousMousePosition.y
+  };
+  if (isDragging) {
+    tetrahedron.rotation.y -= toRadians(deltaMove.x);
+    tetrahedron.rotation.x -= toRadians(deltaMove.y);
   }
+  previousMousePosition = {
+    x: e.offsetX,
+    y: e.offsetY
+  };
 });
 
 canvas.addEventListener('pointerup', e => {
   console.log('addEventListener(mouseup');
   isDragging = false;
   console.log('🔺 tetrahedron', tetrahedron);
+  console.log('↗ hola', 'hola');
+  console.log('↗ faces', tetrahedron.geometry);
 });
 
 // Resize
