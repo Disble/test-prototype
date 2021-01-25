@@ -2,7 +2,8 @@
 import * as THREE from './three.module.js';
 // import { OrbitControls } from './OrbitControls.js';
 
-const elContainer = document.getElementById('three-control');
+const nameContainer = 'three-control';
+const elContainer = document.getElementById(nameContainer);
 const elContainerWidth = elContainer.offsetWidth;
 const elContainerHeight = elContainer.offsetHeight;
 
@@ -25,7 +26,7 @@ const newCamera = new THREE.PerspectiveCamera(
   45,
   elContainerWidth / elContainerHeight,
   3,
-  7
+  700
 );
 const helper = new THREE.CameraHelper(newCamera);
 scene.add(newCamera);
@@ -44,13 +45,13 @@ geometry.vertices.push(
 );
 
 geometry.faces.push(
-  // bottom
-  new THREE.Face3(0, 1, 2),
-  // front
+  // bottom - yellow
+  new THREE.Face3(2, 1, 0),
+  // front - green
   new THREE.Face3(0, 3, 2),
-  // right
+  // right - blue
   new THREE.Face3(0, 1, 3),
-  // back
+  // back - red
   new THREE.Face3(1, 2, 3),
 );
 
@@ -61,7 +62,6 @@ geometry.faces[3].color = new THREE.Color('#D03038');
 
 // Material básico de un solo color, sin reflejos, ni sombras.
 const material = new THREE.MeshBasicMaterial({
-  side: THREE.DoubleSide,
   flatShading: true,
   vertexColors: THREE.VertexColors,
   wireframe: isWireframe
@@ -88,7 +88,7 @@ scene.add(mesh);
 // mesh.rotation.set(5.5, -0.81, 1.5) // 100% red x2 bassed on green
 
 camera.position.set(-10, 10, 10);
-newCamera.position.z = 5;
+newCamera.position.z = 10;
 
 // Muestra el eje de coordenadas
 if (hasAxesHelpers) {
@@ -105,7 +105,7 @@ renderer.setSize(elContainerWidth, elContainerHeight);
 elContainer.appendChild(renderer.domElement);
 
 const resize = () => {
-  const elContainerUpdated = document.getElementById('three-control');
+  const elContainerUpdated = document.getElementById(nameContainer);
   const elContainerWidthUpdated = elContainerUpdated.offsetWidth;
   const elContainerHeightUpdated = elContainerUpdated.offsetHeight;
   renderCamera.aspect = elContainerWidthUpdated / elContainerHeightUpdated;
@@ -138,19 +138,24 @@ renderer.domElement.addEventListener('mousemove', e => {
   // console.log('🎲 deltaMove', deltaMove);
 
   if (isDragging && isLeftClick(e)) {
-    const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(
-        toRadians(deltaMove.y * 1),
-        toRadians(deltaMove.x * 1),
-        0,
-        'XYZ'
-      )
-    );
+    // const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
+    //   new THREE.Euler(
+    //     toRadians(deltaMove.y * 1),
+    //     toRadians(deltaMove.x * 1),
+    //     0,
+    //     'XYZ'
+    //   )
+    // );
     // console.log(deltaRotationQuaternion);
-    mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
-    // console.log('🔄 quaternion', mesh.quaternion);
-  }
+    //mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
+    mesh.geometry.rotateY(toRadians(deltaMove.x * 1));
+    mesh.geometry.rotateX(toRadians(deltaMove.y * 1));
 
+
+    // console.log('🔄 quaternion', mesh.quaternion);
+	//console.log('🔄 rotating', 'rotating');
+  }
+  
   previousMousePosition = {
     x: e.offsetX,
     y: e.offsetY
@@ -162,15 +167,122 @@ renderer.domElement.addEventListener('mouseup', e => {
   // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   console.log('🀄 mesh up', mesh);
   // console.log('🧧 renderer', renderer);
-  console.log('📹 camera', camera);
-
+  //console.log('📹 camera', camera);
+  
   console.log('↗ normal', mesh.geometry.computeFaceNormals());
+
+  //////////////////////////////////--begin--////////////////////////////////////////////
+
+
+
+  /* camera position and normal vector of each face    */
+  //mesh.geometry.computeFaceNormals()
+  console.log('↗ hola', 'hola');
+  console.log('↗ faces', mesh.geometry.faces);
+  // direction to the camera,  dir = cameraPosition - Position of the figure
+  const dirToCamera = newCamera.position.clone().sub(mesh.position);
+  dirToCamera.normalize();
+
+  console.log('↗ dirToCamera', dirToCamera);
+  console.log('↗ newCamera.position', newCamera.position);
+  console.log('↗ camera.position', camera.position);
+  console.log('↗ mesh.position', mesh.position);
+
+
+  // dot product of the to vectors
+  const angleValueFaceYellow = mesh.geometry.faces[0].normal.dot(dirToCamera);
+  const angleValueFaceGreen = mesh.geometry.faces[1].normal.dot(dirToCamera);
+  const angleValueFaceBlue = mesh.geometry.faces[2].normal.dot(dirToCamera);
+  const angleValueFaceRed = mesh.geometry.faces[3].normal.dot(dirToCamera);
+  // angleValue will be 1 when facing the camera,
+  // 0 when 90degree, and -1 when face the opposite direction.
+  // If you need degrees instead, do this:
+
+  const angleYellow = Math.acos(angleValueFaceYellow) * 180 / Math.PI;
+  const angleGreen = Math.acos(angleValueFaceGreen) * 180 / Math.PI;
+  const angleBlue = Math.acos(angleValueFaceBlue) * 180 / Math.PI;
+  const angleRed = Math.acos(angleValueFaceRed) * 180 / Math.PI;
+
+
+
+  console.log('↗ angleValueFaceYellow', angleValueFaceYellow);
+  console.log('↗ angleValueFaceGreen', angleValueFaceGreen);
+  console.log('↗ angleValueFaceBlue', angleValueFaceBlue);
+  console.log('↗ angleValueFaceRed', angleValueFaceRed);
+
+  console.log('↗ angleYellow', angleYellow);
+  console.log('↗ angleGreen', angleGreen);
+  console.log('↗ angleBlue', angleBlue);
+  console.log('↗ angleRed', angleRed);
+  console.log('↗ mesh.quaternion', mesh.quaternion);
+  console.log('↗ mesh', mesh);
+  ///////////////////////////////--end--/////////////////////////////////////////////////////
+  let facesPercentage = calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed);
+
+  console.log('↗ Percentage Yellow', facesPercentage.yellow);
+  console.log('↗ Percentage Green', facesPercentage.green);
+  console.log('↗ Percentage Blue', facesPercentage.blue);
+  console.log('↗ Percentage Red', facesPercentage.red);
+
+  document.getElementById('index-red').innerText = +facesPercentage.red.toFixed(2);
+  document.getElementById('index-yellow').innerText = +facesPercentage.yellow.toFixed(2);
+  document.getElementById('index-green').innerText = +facesPercentage.green.toFixed(2);
+  document.getElementById('index-blue').innerText = +facesPercentage.blue.toFixed(2);
+
+
   // console.log('🈯 camera projectionMatrix', camera.projectionMatrix);
   // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix);
   // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.determinant());
   // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.getMaxScaleOnAxis());
   isDragging = false;
 });
+
+// Calculor de indices de faces RD
+function calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed) {
+  let angleValueTotal = 0;
+  let faceYellow = false;
+  let faceGreen = false;
+  let faceBlue = false;
+  let faceRed = false;
+  let contFaces = 0;
+  let facePercentageYellow = 0.0;
+  let facePercentageGreen = 0.0;
+  let facePercentageBlue = 0.0;
+  let facePercentageRed = 0.0;
+
+  if (angleValueFaceYellow >= 0) {
+    angleValueTotal += angleValueFaceYellow;
+    faceYellow = true;
+    contFaces++;
+  }
+  if (angleValueFaceGreen >= 0) {
+    angleValueTotal += angleValueFaceGreen;
+    faceGreen = true;
+    contFaces++;
+  }
+  if (angleValueFaceBlue >= 0) {
+    angleValueTotal += angleValueFaceBlue;
+    faceBlue = true;
+    contFaces++;
+  }
+  if (angleValueFaceRed >= 0) {
+    angleValueTotal += angleValueFaceRed;
+    faceRed = true;
+    contFaces++;
+  }
+
+  if (faceYellow) facePercentageYellow = angleValueFaceYellow / angleValueTotal * 100;
+  if (faceGreen) facePercentageGreen = angleValueFaceGreen / angleValueTotal * 100;
+  if (faceBlue) facePercentageBlue = angleValueFaceBlue / angleValueTotal * 100;
+  if (faceRed) facePercentageRed = angleValueFaceRed / angleValueTotal * 100;
+
+  return {
+    yellow: facePercentageYellow,
+    green: facePercentageGreen,
+    blue: facePercentageBlue,
+    red: facePercentageRed
+  }
+}
 
 
 // #######################
