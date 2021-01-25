@@ -6,9 +6,10 @@ const scene = new BABYLON.Scene(engine);
 scene.clearColor = new BABYLON.Color3(1, 1, 1);
 scene.ambientColor = new BABYLON.Color3(1, 1, 1);
 // Camera
-// const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 0, -10), scene);
-const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
-camera.attachControl(canvas, true);
+const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 0, -10), scene);
+// const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
+// camera.attachControl(canvas, true);
+
 // Light
 // const light = new BABYLON.PointLight('light', new BABYLON.Vector3(10, 10, 10), scene);
 const faceColors = new Array(4);
@@ -45,7 +46,47 @@ const tetrahedronMaterial = new BABYLON.StandardMaterial('material', scene);
 // tetrahedronMaterial.emissiveColor = new BABYLON.Color3(0, 0.58, 0.86);
 tetrahedronMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
 tetrahedron.material = tetrahedronMaterial;
-console.log('🔺 tetrahedron', tetrahedron);
+
+// INTENTO DE ROTACION EN 3D x2
+let isDragging = false;
+let previousMousePosition = {
+  x: 0,
+  y: 0
+};
+
+canvas.addEventListener('pointerdown', e => {
+  console.log('addEventListener(mousedown');
+  // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
+  isDragging = true;
+});
+
+canvas.addEventListener('pointermove', e => {
+  // console.log('addEventListener(mousemove');
+  const deltaMove = {
+    x: e.offsetX - previousMousePosition.x,
+    y: e.offsetY - previousMousePosition.y
+  };
+
+  // console.log('🎲 deltaMove', deltaMove);
+
+  if (isDragging && isLeftClick(e)) {
+    tetrahedron.rotation.x = (deltaMove.y) / 10.0;
+    tetrahedron.rotation.y = (deltaMove.x) / 10.0;
+  }
+
+  previousMousePosition = {
+    x: e.offsetX,
+    y: e.offsetY
+  };
+  // mesh.
+});
+
+canvas.addEventListener('pointerup', e => {
+  console.log('addEventListener(mouseup');
+  isDragging = false;
+  console.log('🔺 tetrahedron', tetrahedron);
+});
+
 // Resize
 window.addEventListener("resize", function () {
   engine.resize();
@@ -55,4 +96,6 @@ const renderLoop = function () {
   scene.render();
 };
 engine.runRenderLoop(renderLoop);
+const toRadians = angle => angle * (Math.PI / 180);
+const isLeftClick = e => e.buttons === 1;
 export default engine;
