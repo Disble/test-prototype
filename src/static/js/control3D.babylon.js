@@ -49,36 +49,21 @@ tetrahedron.material = tetrahedronMaterial;
 
 // INTENTO DE ROTACION EN 3D x2
 let isDragging = false;
-let previousMousePosition = {
-  x: 0,
-  y: 0
-};
+let currentPosition = { x: 0, y: 0 };
 
 canvas.addEventListener('pointerdown', e => {
   console.log('addEventListener(mousedown');
   // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
+  currentPosition.x = e.clientX;
+  currentPosition.y = e.clientY;
   isDragging = true;
 });
 
 canvas.addEventListener('pointermove', e => {
-  // console.log('addEventListener(mousemove');
-  const deltaMove = {
-    x: e.offsetX - previousMousePosition.x,
-    y: e.offsetY - previousMousePosition.y
-  };
-
-  // console.log('🎲 deltaMove', deltaMove);
-
   if (isDragging && isLeftClick(e)) {
-    tetrahedron.rotation.x = (deltaMove.y) / 10.0;
-    tetrahedron.rotation.y = (deltaMove.x) / 10.0;
+    tetrahedron.rotation.y = (e.clientX - currentPosition.x) / 80.0;
+    tetrahedron.rotation.x = (e.clientY - currentPosition.y) / 80.0;
   }
-
-  previousMousePosition = {
-    x: e.offsetX,
-    y: e.offsetY
-  };
-  // mesh.
 });
 
 canvas.addEventListener('pointerup', e => {
