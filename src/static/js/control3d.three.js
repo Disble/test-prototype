@@ -224,10 +224,10 @@ renderer.domElement.addEventListener('mouseup', e => {
   console.log('↗ Percentage Blue', facesPercentage.blue);
   console.log('↗ Percentage Red', facesPercentage.red);
 
-  document.getElementById('index-red').innerText = +facesPercentage.red.toFixed(2);
-  document.getElementById('index-yellow').innerText = +facesPercentage.yellow.toFixed(2);
-  document.getElementById('index-green').innerText = +facesPercentage.green.toFixed(2);
-  document.getElementById('index-blue').innerText = +facesPercentage.blue.toFixed(2);
+  document.getElementById('index-red').innerText = `${+facesPercentage.red.toFixed(2)}%`;
+  document.getElementById('index-yellow').innerText = `${+facesPercentage.yellow.toFixed(2)}%`;
+  document.getElementById('index-green').innerText = `${+facesPercentage.green.toFixed(2)}%`;
+  document.getElementById('index-blue').innerText = `${+facesPercentage.blue.toFixed(2)}%`;
 
 
   // console.log('🈯 camera projectionMatrix', camera.projectionMatrix);
