@@ -1,6 +1,5 @@
 // ARCHIVO QUE CONTIENE UN TETRAHEDRON CON THREE.JS
 import * as THREE from './three.module.js';
-// import { OrbitControls } from './OrbitControls.js';
 
 const nameContainer = 'three-control';
 const elContainer = document.getElementById(nameContainer);
@@ -34,10 +33,6 @@ scene.add(helper);
 
 const geometry = new THREE.Geometry();
 geometry.vertices.push(
-  // new THREE.Vector3(0, 0, 0),  // 0
-  // new THREE.Vector3(-1, 0, 0),  // 1
-  // new THREE.Vector3(0, 0, 1),  // 2
-  // new THREE.Vector3(0, -1, 0),  // 3
   new THREE.Vector3((8 / 9) ** 0.5, /** */ 0, /** */ -(1 / 3)),  // 0
   new THREE.Vector3(-((2 / 9) ** 0.5), /** */(2 / 3) ** 0.5, /** */ -(1 / 3)),  // 1
   new THREE.Vector3(-((2 / 9) ** 0.5), /** */ -((2 / 3) ** 0.5), /** */ -(1 / 3)),  // 2
@@ -73,22 +68,8 @@ const mesh = new THREE.Mesh(
 );
 scene.add(mesh);
 
-// x = arriba para abajo, y = arriba-izquierda a abajo-derecha, z = rota en sentido antihorario
-// mesh.rotation.set(x, y, z);
-// mesh.rotation.set(1, 0, 0);
-// mesh.rotation.set(0, 1, 0);
-// mesh.rotation.set(0, 0, 1);
-// mesh.rotation.set(1, 1, 1);
-// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -1.3) // 100% blue
-// mesh.rotation.set(-0.43927385314709855, -0.8162790280292672, -0.02861921459321402) // 100% blue
-// mesh.rotation.set(2.685027739156758, -0.8057352837377293, 1.5341909982468425) // 100% green
-// mesh.rotation.set(2.5714788463742426, 0.7976984017569686, -3.122006451261966) // 100% red
-// mesh.rotation.set(1.0102729943720952, 0.032024282249154275, -0.8180855513429233) // 100% yellow
-// mesh.rotation.set(2.5, -0.81, 1.5) // 100% red x2 bassed on green
-// mesh.rotation.set(5.5, -0.81, 1.5) // 100% red x2 bassed on green
-
 camera.position.set(-10, 10, 10);
-newCamera.position.z = 10;
+newCamera.position.z = 5;
 
 // Muestra el eje de coordenadas
 if (hasAxesHelpers) {
@@ -135,32 +116,15 @@ renderer.domElement.addEventListener('mousemove', e => {
     y: e.offsetY - previousMousePosition.y
   };
 
-  // console.log('🎲 deltaMove', deltaMove);
-
   if (isDragging && isLeftClick(e)) {
-    // const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
-    //   new THREE.Euler(
-    //     toRadians(deltaMove.y * 1),
-    //     toRadians(deltaMove.x * 1),
-    //     0,
-    //     'XYZ'
-    //   )
-    // );
-    // console.log(deltaRotationQuaternion);
-    //mesh.quaternion.multiplyQuaternions(deltaRotationQuaternion, mesh.quaternion);
     mesh.geometry.rotateY(toRadians(deltaMove.x * 1));
     mesh.geometry.rotateX(toRadians(deltaMove.y * 1));
-
-
-    // console.log('🔄 quaternion', mesh.quaternion);
-	//console.log('🔄 rotating', 'rotating');
   }
   
   previousMousePosition = {
     x: e.offsetX,
     y: e.offsetY
   };
-  // mesh.
 });
 
 renderer.domElement.addEventListener('mouseup', e => {
@@ -168,13 +132,9 @@ renderer.domElement.addEventListener('mouseup', e => {
   console.log('🀄 mesh up', mesh);
   // console.log('🧧 renderer', renderer);
   //console.log('📹 camera', camera);
-  
   console.log('↗ normal', mesh.geometry.computeFaceNormals());
 
   //////////////////////////////////--begin--////////////////////////////////////////////
-
-
-
   /* camera position and normal vector of each face    */
   //mesh.geometry.computeFaceNormals()
   console.log('↗ hola', 'hola');
@@ -239,6 +199,9 @@ renderer.domElement.addEventListener('mouseup', e => {
 
 // Calculor de indices de faces RD
 function calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed) {
+  // De momento 6.71% de error
+  // R: 93.29% B: 6.71% G: 0% Y: 0%
+  // Cuando se ve un 100% de cara Roja
   let angleValueTotal = 0;
   let faceYellow = false;
   let faceGreen = false;

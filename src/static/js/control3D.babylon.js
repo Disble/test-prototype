@@ -7,11 +7,7 @@ scene.clearColor = new BABYLON.Color3(1, 1, 1);
 scene.ambientColor = new BABYLON.Color3(1, 1, 1);
 // Camera
 const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 0, -10), scene);
-// const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
-// camera.attachControl(canvas, true);
 
-// Light
-// const light = new BABYLON.PointLight('light', new BABYLON.Vector3(10, 10, 10), scene);
 const faceColors = new Array(4);
 faceColors[0] = new BABYLON.Color4(1, 0.96, 0.27, 1);
 faceColors[1] = new BABYLON.Color4(0.62, 0.88, 0.23, 1);
@@ -39,9 +35,6 @@ const tetrahedronPrism = {
 // const box = BABYLON.Mesh.Tetrahedron('box', 2, scene);
 const tetrahedron = BABYLON.MeshBuilder.CreatePolyhedron("t", tetrahedronPrism, scene);
 tetrahedron.updateFacetData();
-// const tetrahedron = BABYLON.MeshBuilder.CreatePolyhedron("h", { type: 0, size: 1, faceColors }, scene);
-tetrahedron.rotation.x = -0.2;
-tetrahedron.rotation.y = -0.4;
 // Material
 const tetrahedronMaterial = new BABYLON.StandardMaterial('material', scene);
 // tetrahedronMaterial.emissiveColor = new BABYLON.Color3(0, 0.58, 0.86);
@@ -50,50 +43,52 @@ tetrahedron.material = tetrahedronMaterial;
 
 // INTENTO DE ROTACION EN 3D x2
 let isDragging = false;
-let previousMousePosition = { x: 0, y: 0 };
+let currentPosition = { x: 0, y: 0 };
+let currentRotation = { x: 0, y: 0 };
+//variables to set last angle and curr angle in each frame
+//so we can calculate angleDiff and use it for inertia
+let lastAngleDiff = { x: 0, y: 0 };
+let oldAngle = { x: 0, y: 0 };
+let newAngle = { x: 0, y: 0 };
 
-canvas.addEventListener('pointerdown', e => {
+canvas.addEventListener('pointerdown', evt => {
   console.log('addEventListener(mousedown');
-  // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
-  // previousMousePosition.x = previousMousePosition.x - e.clientX;
-  // previousMousePosition.y = previousMousePosition.x - e.clientY;
+  currentPosition.x = evt.clientX;
+  currentPosition.y = evt.clientY;
+  currentRotation.x = tetrahedron.rotation.x;
+  currentRotation.y = tetrahedron.rotation.y;
   isDragging = true;
 });
 
-canvas.addEventListener('pointermove', e => {
-  const deltaMove = {
-    x: e.offsetX - previousMousePosition.x,
-    y: e.offsetY - previousMousePosition.y
-  };
+canvas.addEventListener('pointermove', evt => {
   if (isDragging) {
-    tetrahedron.rotation.y -= toRadians(deltaMove.x);
-    tetrahedron.rotation.x -= toRadians(deltaMove.y);
+    //set last angle before changing the rotation
+    oldAngle.x = tetrahedron.rotation.x;
+    oldAngle.y = tetrahedron.rotation.y;
+    //rotate the mesh
+    tetrahedron.rotation.y -= (evt.clientX - currentPosition.x) / 80.0;
+    tetrahedron.rotation.x -= (evt.clientY - currentPosition.y) / 80.0;
+    //set the current angle after the rotation
+    newAngle.x = tetrahedron.rotation.x;
+    newAngle.y = tetrahedron.rotation.y;
+    //calculate the anglediff
+    lastAngleDiff.x = newAngle.x - oldAngle.x;
+    lastAngleDiff.y = newAngle.y - oldAngle.y;
+    currentPosition.x = evt.clientX;
+    currentPosition.y = evt.clientY;
   }
-  previousMousePosition = {
-    x: e.offsetX,
-    y: e.offsetY
-  };
 });
 
 canvas.addEventListener('pointerup', e => {
   console.log('addEventListener(mouseup');
   isDragging = false;
-  tetrahedron.computeWorldMatrix(true);
-  tetrahedron.updateFacetData();
   console.log('🔺 tetrahedron', tetrahedron);
-  console.log('↗ hola', 'hola');
   console.log('📹 camera', camera);
   // console.log('📹 camera', tetrahedron.position);
   const dirToCamera = camera.position.clone().subtract(tetrahedron.position);
-  const normals = tetrahedron.getFacetLocalNormals();
-  // const normals = tetrahedron.getFacetLocalNormals();
-  dirToCamera.normalize()
+  dirToCamera.normalize();
   console.log('📹↗ dirToCamera', dirToCamera);
-  // console.log('↗ dirToCamera normalize', tetrahedron.facetNb);
-  // console.log('↗ dirToCamera normalize', tetrahedron.getFacetLocalPositions());
-  console.log('↗ dirToCamera normalize', normals);
-  // console.log('↗ getVerticesData normalize', tetrahedron.getVerticesData(BABYLON.VertexBuffer.NormalKind));
-  // console.log('↗ angleValueFaceYellow', normals[0].multiply(dirToCamera));
+
   const angleValueFaceYellow = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(0), dirToCamera);
   const angleValueFaceGreen = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(1), dirToCamera);
   const angleValueFaceBlue = BABYLON.Vector3.Dot(tetrahedron.getFacetNormal(2), dirToCamera);
@@ -103,8 +98,6 @@ canvas.addEventListener('pointerup', e => {
   console.log('↗ angleValueFaceGreen', angleValueFaceGreen);
   console.log('↗ angleValueFaceBlue', angleValueFaceBlue);
   console.log('↗ angleValueFaceRed', angleValueFaceRed);
-  // console.log('↗', tetrahedron.getFacetNormal(0));
-  // console.log('↗', tetrahedron.getFacetNormal(1));
 
   let facesPercentage = calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed);
 
