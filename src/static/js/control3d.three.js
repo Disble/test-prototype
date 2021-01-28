@@ -104,12 +104,11 @@ let previousMousePosition = {
   x: 0,
   y: 0
 };
-
+// 🐟
 renderer.domElement.addEventListener('mousedown', e => {
-  // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   isDragging = true;
 });
-
+// 🐠
 renderer.domElement.addEventListener('mousemove', e => {
   const deltaMove = {
     x: e.offsetX - previousMousePosition.x,
@@ -117,17 +116,22 @@ renderer.domElement.addEventListener('mousemove', e => {
   };
 
   if (isDragging && isLeftClick(e)) {
-    mesh.geometry.rotateY(toRadians(deltaMove.x * 1));
-    mesh.geometry.rotateX(toRadians(deltaMove.y * 1));
+    if (e.ctrlKey === true) {
+      mesh.geometry.rotateZ(toRadians(-deltaMove.x * 1));
+      mesh.geometry.rotateZ(toRadians(-deltaMove.y * 1));
+    } else {
+      mesh.geometry.rotateY(toRadians(deltaMove.x * 1));
+      mesh.geometry.rotateX(toRadians(deltaMove.y * 1));
+    }
   }
-  
+
   previousMousePosition = {
     x: e.offsetX,
     y: e.offsetY
   };
 });
-
-renderer.domElement.addEventListener('mouseup', e => {
+// 🐡
+const handleCalc = e => {
   // if (!isLeftClick(e)) return; // bloquear cualquier botón que no sea el izquierdo
   console.log('🀄 mesh up', mesh);
   // console.log('🧧 renderer', renderer);
@@ -154,28 +158,7 @@ renderer.domElement.addEventListener('mouseup', e => {
   const angleValueFaceGreen = mesh.geometry.faces[1].normal.dot(dirToCamera);
   const angleValueFaceBlue = mesh.geometry.faces[2].normal.dot(dirToCamera);
   const angleValueFaceRed = mesh.geometry.faces[3].normal.dot(dirToCamera);
-  // angleValue will be 1 when facing the camera,
-  // 0 when 90degree, and -1 when face the opposite direction.
-  // If you need degrees instead, do this:
 
-  const angleYellow = Math.acos(angleValueFaceYellow) * 180 / Math.PI;
-  const angleGreen = Math.acos(angleValueFaceGreen) * 180 / Math.PI;
-  const angleBlue = Math.acos(angleValueFaceBlue) * 180 / Math.PI;
-  const angleRed = Math.acos(angleValueFaceRed) * 180 / Math.PI;
-
-
-
-  console.log('↗ angleValueFaceYellow', angleValueFaceYellow);
-  console.log('↗ angleValueFaceGreen', angleValueFaceGreen);
-  console.log('↗ angleValueFaceBlue', angleValueFaceBlue);
-  console.log('↗ angleValueFaceRed', angleValueFaceRed);
-
-  console.log('↗ angleYellow', angleYellow);
-  console.log('↗ angleGreen', angleGreen);
-  console.log('↗ angleBlue', angleBlue);
-  console.log('↗ angleRed', angleRed);
-  console.log('↗ mesh.quaternion', mesh.quaternion);
-  console.log('↗ mesh', mesh);
   ///////////////////////////////--end--/////////////////////////////////////////////////////
   let facesPercentage = calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed);
 
@@ -189,19 +172,61 @@ renderer.domElement.addEventListener('mouseup', e => {
   document.getElementById('index-green').innerText = `${+facesPercentage.green.toFixed(2)}%`;
   document.getElementById('index-blue').innerText = `${+facesPercentage.blue.toFixed(2)}%`;
 
-
-  // console.log('🈯 camera projectionMatrix', camera.projectionMatrix);
-  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix);
-  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.determinant());
-  // console.log('🈯 camera projectionMatrix determinante', camera.projectionMatrix.getMaxScaleOnAxis());
   isDragging = false;
+}
+
+const rotateWithArrows = e => {
+  const arrowKeys = {
+    ArrowUp: () => mesh.geometry.rotateX(-0.01),
+    ArrowLeft: () => mesh.geometry.rotateY(-0.01),
+    ArrowDown: () => mesh.geometry.rotateX(0.01),
+    ArrowRight: () => mesh.geometry.rotateY(0.01)
+  };
+  const handleArrow = arrowKeys[e.key];
+  if (handleArrow) return handleArrow();
+}
+
+const rotateWithArrowsCtrl = e => {
+  const arrowKeys = {
+    ArrowUp: () => mesh.geometry.rotateZ(-0.01),
+    ArrowLeft: () => mesh.geometry.rotateZ(0.01),
+    ArrowDown: () => mesh.geometry.rotateZ(0.01),
+    ArrowRight: () => mesh.geometry.rotateZ(-0.01)
+  };
+  const handleArrow = arrowKeys[e.key];
+  if (handleArrow) return handleArrow();
+}
+
+
+document.addEventListener('keyup', e => {
+  let isExec = false;
+  if (e.ctrlKey === true) {
+    isExec = rotateWithArrowsCtrl(e);
+  } else {
+    isExec = rotateWithArrows(e);
+  }
+  if (isExec) handleCalc(e);
 });
+
+document.addEventListener('keydown', (e) => {
+  if (e.repeat) {
+    if (e.ctrlKey === true) {
+      rotateWithArrowsCtrl(e);
+    } else {
+      rotateWithArrows(e);
+    }
+  }
+});
+
+renderer.domElement.addEventListener('mouseup', handleCalc);
 
 // Calculor de indices de faces RD
 function calcIndex(angleValueFaceYellow, angleValueFaceGreen, angleValueFaceBlue, angleValueFaceRed) {
   // De momento 6.71% de error
   // R: 93.29% B: 6.71% G: 0% Y: 0%
   // Cuando se ve un 100% de cara Roja
+  // R: 6.82% B: 45.05% G: 48.13% Y: 0%
+  // Solo se ve azul y verde
   let angleValueTotal = 0;
   let faceYellow = false;
   let faceGreen = false;
