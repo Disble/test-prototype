@@ -1,26 +1,50 @@
 import DotCSV from './dotcsv.js';
 import utils from './utils.js';
 
-const dplots = async () => {
+const dplots = async ({ kernel } = {}) => {
+  console.log("✨ kernel", kernel);
+  if (kernel === undefined) return;
+  const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kcmds?k1=${kernel.yellow}&k2=${kernel.green}&k3=${kernel.blue}&k4=${kernel.red}`);
+
+  console.log('📋 jsonTest', jsonTest);
+
   const sphere2DCSV = await utils.csvRequest('../csv/MDSRDLabeled.csv');
   const sphere3DCSV = await utils.csvRequest('../csv/sphereLabel.csv');
 
   const sphere2D = new DotCSV(sphere2DCSV, ['X', 'Y']);
-  const sphere3D = new DotCSV(sphere3DCSV, ['X', 'Y', 'Z']);
+  const sphere3D = new DotCSV(sphere3DCSV, [jsonTest.x, jsonTest.y, jsonTest.z]);
+
+  console.log(Math.min(...jsonTest.labels));
+  console.log(Math.max(...jsonTest.labels));
+
+  // const colors = ['red', 'blue', 'green', 'yellow', 'brown', 'pink', 'orchid',
+  //   'mediumslateblue', 'orangered', 'darkgreen', 'steelblue', 'sandybrown',
+  //   'maroon', 'slategrey', 'teal'];
+
+  const colors = {
+    4: 'red',
+    5: 'blue',
+    6: 'green',
+    7: 'yellow',
+    8: 'pink'
+  }
+
+  const labelsColors = jsonTest.labels.map(label => colors[label]);
+  console.log(labelsColors);
 
   const trace1 = {
-    x: sphere3D.x,
-    y: sphere3D.y,
-    z: sphere3D.z,
+    x: jsonTest.x,
+    y: jsonTest.y,
+    z: jsonTest.z,
     marker: {
       size: 2,
-      color: sphere3D.getColors('Label'),
+      color: labelsColors,
       colorscale: 'Reds',
       line: { color: 'transparent' }
     },
     mode: 'markers',
     type: 'scatter3d',
-    text: sphere3D.getColumn('iris'),
+    // text: sphere3D.getColumn('iris'),
     hoverinfo: 'x+y+z+text',
     showlegend: false,
   };

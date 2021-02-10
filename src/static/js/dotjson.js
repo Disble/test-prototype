@@ -4,7 +4,7 @@
  * 
  * Visitad su canal: https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg
  */
-export default class DotCSV {
+export default class DotJSON {
   _setColors = ['red', 'blue', 'green', 'yellow', 'brown', 'pink', 'orchid',
     'mediumslateblue', 'orangered', 'darkgreen', 'steelblue', 'sandybrown',
     'maroon', 'slategrey', 'teal'];
@@ -22,18 +22,18 @@ export default class DotCSV {
    * etiquetas de la primera fila, con esta opción no se puede acceder a los
    * getters de `csv.x`, `csv.y` y `csv.z`.
    */
-  constructor(rows, labels = ['X', 'Y', 'Z']) {
+  constructor(rows, labels = ['x', 'y', 'z', 'labels']) {
     this._rows = rows;
 
     if (typeof labels === 'string') {
       if (labels === 'auto') {
-        this._labels = Object.keys(rows[0]);
+        this._labelsRaw = Object.keys(rows[0]);
         return;
       }
       throw new Error(`String debe tener el valor "auto"`);
     }
-    this._labels = labels;
-    [this._x, this._y, this._z] = this._labels;
+    this._labelsRaw = labels;
+    [this._x, this._y, this._z, this._labels] = this._labelsRaw;
   }
   /**
    * Retorna la columna de datos con el nombre de etiqueta proporcionada.
@@ -97,7 +97,7 @@ export default class DotCSV {
   }
 
   getAllLabels() {
-    return this._labels;
+    return this._labelsRaw;
   }
 
   getAllData() {
@@ -117,7 +117,7 @@ export default class DotCSV {
   }
 
   get labels() {
-    return this._labels;
+    return this._labelsRaw;
   }
 
   get rows() {

@@ -1,10 +1,17 @@
 import utils from './utils.js';
 
-const dstats = async () => {
-  // const jsonTest = await utils.jsonRequest('https://jsonplaceholder.typicode.com/todos');
+const dstats = async ({ kernel } = {}) => {
+
+  // console.log("✨ kernel", kernel);
+  // if (kernel === undefined) return;
+  // const kernelToApi = Object.keys(kernel).map(value => kernel[value]).filter(value => value > 0);
+  // console.log(kernelToApi);
+  // const jsonTest = await utils.jsonRequest('http://186.71.197.203:8000/api/kcmds');
+  // const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kle/${kernel.yellow}/${kernel.green}/${kernel.blue}/${kernel.red}`);
+  // const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kcmds/${kernel.yellow}/${kernel.green}/${kernel.blue}/${kernel.red}`);
+  // const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kle?k1=${kernel.yellow}&k2=${kernel.green}&k3=${kernel.blue}&k4=${kernel.red}`);
 
   // console.log('📋 jsonTest', jsonTest);
-  
   // const usersListplay = {};
 
   // for (const user of jsonTest) {
