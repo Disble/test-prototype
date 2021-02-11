@@ -1,44 +1,35 @@
 import DotCSV from './dotcsv.js';
+import DotJSON from './dotjson.js';
 import utils from './utils.js';
 
+// shereLabel.csv plotear en 3D
 const dplots = async ({ kernel } = {}) => {
   console.log("✨ kernel", kernel);
   if (kernel === undefined) return;
-  const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kcmds?k1=${kernel.yellow}&k2=${kernel.green}&k3=${kernel.blue}&k4=${kernel.red}`);
+  // const jsonTest = await utils.jsonRequest(`http://186.71.197.203:8000/api/kcmds?k1=${kernel.yellow}&k2=${kernel.green}&k3=${kernel.blue}&k4=${kernel.red}`);
+  const jsonTest = await utils.jsonRequest(`http://localhost:8000/kcmds`);
 
   console.log('📋 jsonTest', jsonTest);
 
   const sphere2DCSV = await utils.csvRequest('../csv/MDSRDLabeled.csv');
   const sphere3DCSV = await utils.csvRequest('../csv/sphereLabel.csv');
 
+  console.log('🎄 sphere3DCSV', sphere3DCSV);
+
   const sphere2D = new DotCSV(sphere2DCSV, ['X', 'Y']);
-  const sphere3D = new DotCSV(sphere3DCSV, [jsonTest.x, jsonTest.y, jsonTest.z]);
-
-  console.log(Math.min(...jsonTest.labels));
-  console.log(Math.max(...jsonTest.labels));
-
-  // const colors = ['red', 'blue', 'green', 'yellow', 'brown', 'pink', 'orchid',
-  //   'mediumslateblue', 'orangered', 'darkgreen', 'steelblue', 'sandybrown',
-  //   'maroon', 'slategrey', 'teal'];
-
-  const colors = {
-    4: 'red',
-    5: 'blue',
-    6: 'green',
-    7: 'yellow',
-    8: 'pink'
-  }
+  const sphere3DOriginal = new DotCSV(sphere3DCSV, [jsonTest.x, jsonTest.y, jsonTest.z]);
+  const sphere3DNew = new DotJSON({ dataset: jsonTest, labels: { x: 'x', y: 'y', z: 'z' } });
 
   const labelsColors = jsonTest.labels.map(label => colors[label]);
   console.log(labelsColors);
 
   const trace1 = {
-    x: jsonTest.x,
-    y: jsonTest.y,
-    z: jsonTest.z,
+    x: sphere3DNew.x,
+    y: sphere3DNew.y,
+    z: sphere3DNew.z,
     marker: {
       size: 2,
-      color: labelsColors,
+      color: sphere3DNew.getColors('labels', true),
       colorscale: 'Reds',
       line: { color: 'transparent' }
     },
