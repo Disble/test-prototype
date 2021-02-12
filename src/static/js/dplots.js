@@ -82,7 +82,7 @@ const dplots = async ({ kernel } = {}) => {
       scaleanchor: 'x2'
     },
     annotations: [{
-      text: "Sin reducir",
+      text: "Reducción de dimensiones a 3D",
       font: {
         size: 16,
         color: 'green',
@@ -95,7 +95,7 @@ const dplots = async ({ kernel } = {}) => {
       yref: 'paper',
     },
     {
-      text: "Reducido",
+      text: "Reducción de dimensiones a 2D",
       font: {
         size: 16,
         color: 'orange',
