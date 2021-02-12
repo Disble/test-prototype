@@ -34,7 +34,7 @@ const dstats = async ({ kernel } = {}) => {
 
   const layout = {
     paper_bgcolor: 'white',
-    title: 'Quality curve',
+    title: 'Curva de calidad',
     font: { color: '#2a3b47', family: 'Open Sans' },
     margin: {
       l: 10,

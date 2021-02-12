@@ -17,11 +17,8 @@ const dplots = async ({ kernel } = {}) => {
   console.log('🎄 sphere3DCSV', sphere3DCSV);
 
   const sphere2D = new DotCSV(sphere2DCSV, ['X', 'Y']);
-  const sphere3DOriginal = new DotCSV(sphere3DCSV, [jsonTest.x, jsonTest.y, jsonTest.z]);
+  const sphere3DOriginal = new DotCSV(sphere3DCSV, ['X', 'Y', 'Z']);
   const sphere3DNew = new DotJSON({ dataset: jsonTest, labels: { x: 'x', y: 'y', z: 'z' } });
-
-  const labelsColors = jsonTest.labels.map(label => colors[label]);
-  console.log(labelsColors);
 
   const trace1 = {
     x: sphere3DNew.x,
@@ -29,7 +26,7 @@ const dplots = async ({ kernel } = {}) => {
     z: sphere3DNew.z,
     marker: {
       size: 2,
-      color: sphere3DNew.getColors('labels', true),
+      color: sphere3DNew.getColors('labels'),
       colorscale: 'Reds',
       line: { color: 'transparent' }
     },
@@ -64,7 +61,7 @@ const dplots = async ({ kernel } = {}) => {
 
   const layout = {
     paper_bgcolor: 'white',
-    title: 'Sphere reduction',
+    title: 'Reducción de dimensiones',
     font: { color: 'rgb(42 59 71)', family: 'Open Sans' },
     grid: {
       rows: 1,
@@ -83,7 +80,33 @@ const dplots = async ({ kernel } = {}) => {
     },
     yaxis2: {
       scaleanchor: 'x2'
-    }
+    },
+    annotations: [{
+      text: "Sin reducir",
+      font: {
+        size: 16,
+        color: 'green',
+      },
+      showarrow: false,
+      align: 'center',
+      x: 0.18,
+      y: 1.15,
+      xref: 'paper',
+      yref: 'paper',
+    },
+    {
+      text: "Reducido",
+      font: {
+        size: 16,
+        color: 'orange',
+      },
+      showarrow: false,
+      align: 'center',
+      x: 0.81,
+      y: 1.15,
+      xref: 'paper',
+      yref: 'paper',
+    }]
   };
 
   const config = { responsive: true }
